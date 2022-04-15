@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">MusicPlayer</string>
+    <string name="no_lyric">No lyrics</string>
+    <string name="song_album">Album:</string>
+    <string name="song_artists">Artists:</string>
+    <string name="unknown">&lt;unknown&gt;</string>
+    <string name="song">Song</string>
+    <string name="artists">Artists</string>
+    <string name="duration">Duration</string>
+    <string name="permission_denied">PERMISSION_DENIED</string>
+    <string name="play_mode_random">Shuffle</string>
+    <string name="play_mode_repeat_single">Loop single</string>
+    <string name="play_mode_repeat_list">Loop all</string>
+    <string name="dialog_notice">Notice</string>
+    <string name="dialog_exit_msg">Exit Playback?</string>
+    <string name="dialog_btn_confirm">Exit</string>
+    <string name="dialog_btn_cancel">Cancel</string>
+</resources>

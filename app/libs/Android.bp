@@ -1,0 +1,43 @@
+android_library_import {
+   name: "autosize-1.2.1",
+   aars: ["autosize-1.2.1.aar"],
+   sdk_version: "current",
+}
+android_library_import {
+   name: "glide-transformations-4.3.0",
+   aars: ["glide-transformations-4.3.0.aar"],
+   sdk_version: "current",
+}
+android_library_import {
+   name: "glide-4.12.0",
+   aars: ["glide-4.12.0.aar"],
+   sdk_version: "current",
+}
+android_library_import {
+   name: "gifdecoder-4.12.0",
+   aars: ["gifdecoder-4.12.0.aar"],
+   sdk_version: "current",
+}
+android_library_import {
+   name: "eventbus-3.3.1",
+   aars: ["eventbus-3.3.1.aar"],
+   sdk_version: "current",
+}
+java_import {
+	name: "annotations-4.12.0",
+	jars: ["annotations-4.12.0.jar"],
+	host_supported: true,
+	sdk_version: "current",
+}
+java_import {
+	name: "disklrucache-4.12.0",
+	jars: ["disklrucache-4.12.0.jar"],
+	host_supported: true,
+	sdk_version: "current",
+}
+java_import {
+	name: "eventbus-java-3.3.1",
+	jars: ["eventbus-java-3.3.1.jar"],
+	host_supported: true,
+	sdk_version: "current",
+}
