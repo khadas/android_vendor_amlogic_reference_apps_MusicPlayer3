@@ -178,7 +178,12 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
         Intent intent = getIntent();
         Uri uri = intent.getData();
         if (uri != null && uri.toString().length() > 0) {
-            Song song = parseIntent(uri);
+            Song song = null;
+            try {
+                song = parseIntent(uri);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (song != null) {
                 for (Song localSong : localSongs) {
                     if (localSong.equals(song)) {
@@ -317,7 +322,10 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
     }
 
     public void updateView(Song song) {
-        tvSongName.setText(song.getName());
+        if (song == null) return;
+        if (!TextUtils.equals(song.getName(), tvSongName.getText())) {
+            tvSongName.setText(song.getName());
+        }
         String albumName = getString(R.string.unknown);
         if (song.getAlbum() != null) {
             albumName = song.getAlbum().getName();
