@@ -147,4 +147,10 @@ public class Utils {
         return song;
     }
 
+    public static String formatDuration(long duration) {
+        long minute = duration / 1000 / 60;
+        long second = duration / 1000 % 60;
+        return (minute < 10 ? "0" : "") + minute + ":" + (second < 10 ? "0" : "") + second;
+    }
+
 }

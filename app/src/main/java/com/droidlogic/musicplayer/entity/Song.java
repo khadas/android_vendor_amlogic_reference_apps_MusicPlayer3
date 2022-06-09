@@ -1,5 +1,7 @@
 package com.droidlogic.musicplayer.entity;
 
+import com.droidlogic.musicplayer.util.Utils;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -87,9 +89,7 @@ public class Song implements Serializable {
     }
 
     public String getFormatDuration() {
-        int minute = duration / 1000 / 60;
-        int second = duration / 1000 % 60;
-        return minute + ":" + second;
+        return Utils.formatDuration(duration);
     }
 
     public void setDuration(int duration) {

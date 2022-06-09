@@ -83,7 +83,6 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
     private boolean sourceFromOther;
     private PlayerService.PlayerBinder binder;
     private Song song;
-    private final DateFormat durationFormat = new SimpleDateFormat("mm:ss", Locale.getDefault());
     private final MediaCenter mediaCenter = MediaCenter.getInstance();
 
     private PlayerService.PlayerBackground playerBackground;
@@ -333,7 +332,7 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
         tvSongAlbum.setText(String.format(Locale.getDefault(), "%s%s", getString(R.string.song_album), albumName));
         tvSongArtists.setText(String.format(Locale.getDefault(), "%s%s", getString(R.string.song_artists), song.getArtistsName()));
         int duration = binder.getDuration();
-        tvSongTotalTime.setText(durationFormat.format(duration));
+        tvSongTotalTime.setText(Utils.formatDuration(duration));
         songSeekBar.setMax(duration);
         songSeekBar.setProgress(0);
         songSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -424,7 +423,7 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
                 long time = binder.getCurrentPosition();
                 lrcView.updateTime(time);
                 songSeekBar.setProgress((int) time);
-                tvSongPlayTime.setText(durationFormat.format(time));
+                tvSongPlayTime.setText(Utils.formatDuration(time));
             }
             handler.postDelayed(this, 300);
         }

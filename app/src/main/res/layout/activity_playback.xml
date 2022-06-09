@@ -51,14 +51,13 @@
 
     <com.droidlogic.musicplayer.view.MarqueeTextView
         android:id="@+id/tv_song_name"
-        android:layout_width="0dp"
+        android:layout_width="1000dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="149dp"
         android:singleLine="true"
         android:textColor="#ffffffff"
         android:textSize="80sp"
         app:layout_constraintLeft_toRightOf="@id/img_song_album"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/img_song_album"
         tools:text="爱很简单" />
 
