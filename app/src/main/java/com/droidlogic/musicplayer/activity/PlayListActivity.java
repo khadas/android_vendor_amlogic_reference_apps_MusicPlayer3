@@ -80,7 +80,7 @@ public class PlayListActivity extends BasePlayActivity {
             int currentIndex = playListAdapter.getCurrentIndex();
             if (currentIndex >= 0) {
                 playList.setSelection(currentIndex);
-                playList.smoothScrollToPosition(currentIndex);
+                //playList.smoothScrollToPosition(currentIndex);
             }
         });
         syncPlayInfo(currentSong);
