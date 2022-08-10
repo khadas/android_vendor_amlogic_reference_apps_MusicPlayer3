@@ -33,7 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-public class PlayListActivity extends FragmentActivity {
+public class PlayListActivity extends BasePlayActivity {
 
     private ImageView imgAlbum;
     private TextView tvLyric;
@@ -47,7 +47,6 @@ public class PlayListActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_list);
-        EventBus.getDefault().register(this);
         imgAlbum = findViewById(R.id.img_pl_album);
         tvLyric = findViewById(R.id.tv_pl_lyric);
         tvSongName = findViewById(R.id.tv_pl_play_song);
@@ -168,7 +167,6 @@ public class PlayListActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
         asyncHandler.removeCallbacksAndMessages(null);
         asyncHandler = null;
         handlerThread.quitSafely();

@@ -42,6 +42,7 @@ import com.droidlogic.musicplayer.constant.Constants;
 import com.droidlogic.musicplayer.entity.Song;
 import com.droidlogic.musicplayer.event.EventActivityState;
 import com.droidlogic.musicplayer.event.EventLyricRefresh;
+import com.droidlogic.musicplayer.event.EventPlayControl;
 import com.droidlogic.musicplayer.event.EventPlayOpt;
 import com.droidlogic.musicplayer.event.EventPlaySate;
 import com.droidlogic.musicplayer.event.EventPlaySong;
@@ -63,6 +64,7 @@ import java.util.Locale;
 
 import static com.droidlogic.musicplayer.event.EventActivityState.State.BACKGROUND;
 import static com.droidlogic.musicplayer.event.EventActivityState.State.FOREGROUND;
+import static com.droidlogic.musicplayer.event.EventPlayControl.PlayControl.FORWARD;
 
 public class PlaybackActivity extends BasePlayActivity implements View.OnClickListener, ServiceConnection, View.OnFocusChangeListener {
 
@@ -367,7 +369,7 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
         EventBus.getDefault().post(new EventPlaySate(song));
     }
 
-    private final DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build();
+//    private final DrawableCrossFadeFactory drawableCrossFadeFactory = new DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build();
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onEventPlaySate(EventPlaySate playSate) {
@@ -395,20 +397,64 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void onEventPlayControl(EventPlayControl eventPlayControl) {
+        if (isBindService && binder != null) {
+            switch (eventPlayControl.playControl) {
+                case PAUSE:
+                    btnPause.performClick();
+                    break;
+                case STOP:
+                    binder.pause();
+                    binder.seekTo(0);
+                    lrcView.updateTime(0);
+                    songSeekBar.setProgress(0);
+                    tvSongPlayTime.setText(Utils.formatDuration(0));
+                    break;
+                case PREVIOUS:
+                    btnPre.performClick();
+                    break;
+                case NEXT:
+                    btnNext.performClick();
+                    break;
+                case REWIND:
+                case FORWARD:
+                    long duration = binder.getDuration();
+                    if (binder.getDuration() > 0) {
+                        long step = binder.getDuration() / 10;
+                        long seekTo = binder.getCurrentPosition();
+                        if (eventPlayControl.playControl == FORWARD) {
+                            seekTo += step;
+                            seekTo = Math.min(duration, seekTo);
+                        } else {
+                            seekTo -= step;
+                            seekTo = Math.max(0, seekTo);
+                        }
+                        binder.seekTo((int) seekTo);
+                    }
+                    break;
+            }
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.image_button_pre:
-                binder.playSong(mediaCenter.getPreviousSong());
+                if (binder != null)
+                    binder.playSong(mediaCenter.getPreviousSong());
                 break;
             case R.id.image_button_next:
-                binder.playSong(mediaCenter.getNextSong());
+                if (binder != null)
+                    binder.playSong(mediaCenter.getNextSong());
                 break;
             case R.id.image_button_pause:
-                binder.togglePlay();
+                if (binder != null)
+                    binder.togglePlay();
                 break;
             case R.id.image_button_list_repeat_mode:
-                binder.togglePlayMode();
+                if (binder != null)
+                    binder.togglePlayMode();
                 break;
             case R.id.image_button_song_list:
                 startActivity(new Intent(this, PlayListActivity.class));
