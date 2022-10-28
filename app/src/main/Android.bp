@@ -9,7 +9,7 @@ android_app {
     certificate: "platform",
     sdk_version: "system_current",
 	static_libs: [
-		"autosize",
+		"autosize-1.2.1",
 		"glide-transformations-4.3.0",
 		"glide-4.12.0",
 		"annotations-4.12.0",
