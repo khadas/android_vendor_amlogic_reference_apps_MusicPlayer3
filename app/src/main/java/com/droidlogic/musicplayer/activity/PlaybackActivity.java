@@ -61,6 +61,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import android.util.Log;
+import android.content.Context;
+
 
 import static com.droidlogic.musicplayer.event.EventActivityState.State.BACKGROUND;
 import static com.droidlogic.musicplayer.event.EventActivityState.State.FOREGROUND;
@@ -89,6 +92,7 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
 
     private PlayerService.PlayerBackground playerBackground;
     private boolean isBindService = false;
+    private String TAG = "PlaybackActivity";
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(Looper.getMainLooper()) {
@@ -134,6 +138,7 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
         binder.setHandler(handler);
         if (song != null) {
             //binder.playSong(song, sourceFromOther);
+            requestAudioFocus(true);
             binder.playSong(song, true);
         }
     }
@@ -142,6 +147,7 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
     public void onServiceDisconnected(ComponentName name) {
         isBindService = false;
         binder = null;
+        requestAudioFocus(false);
     }
 
     @Override
@@ -388,8 +394,10 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
         if (isBindService && binder != null) {
             if (BACKGROUND == activityState.state) {
                 playerBackground = binder.playerBackground();
+                requestAudioFocus(false);
             } else if (FOREGROUND == activityState.state) {
                 if (playerBackground != null && playerBackground.isPlaying()) {
+                    requestAudioFocus(true);
                     binder.playSong(playerBackground.getSong(), true, playerBackground.getPosition());
                 }
                 playerBackground = null;
@@ -484,6 +492,7 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
             unbindService(this);
             isBindService = false;
         }
+        requestAudioFocus(false);
     }
 
     private void updatePlayMode(int playMode) {
@@ -531,5 +540,39 @@ public class PlaybackActivity extends BasePlayActivity implements View.OnClickLi
             songSeekBar.setNextFocusDownId(v.getId());
         }
     }
+     private void requestAudioFocus(boolean bRequest) {
+        AudioManager mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        if (bRequest) {
+            mAudioManager.requestAudioFocus(mAudioFocusListener, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
+        } else {
+            mAudioManager.abandonAudioFocus(mAudioFocusListener);
+        }
+    }
+    private AudioManager.OnAudioFocusChangeListener mAudioFocusListener = new AudioManager.OnAudioFocusChangeListener() {
+        public void onAudioFocusChange (int focusChange) {
+
+            Log.d (TAG, "onAudioFocusChange, focusChange: " + focusChange);
+            switch (focusChange) {
+                case AudioManager.AUDIOFOCUS_LOSS:
+
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                     if (binder != null) {
+                        Log.d (TAG, "onAudioFocusChange, loss,pause play" );
+                        binder.pause();
+                    }
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                    break;
+                case AudioManager.AUDIOFOCUS_GAIN:
+                    if (binder != null) {
+                        Log.d (TAG, "onAudioFocusChange, gain,resume play" );
+                        binder.play();
+                    }
+
+                    break;
+            }
+        }
+    };
 
 }
